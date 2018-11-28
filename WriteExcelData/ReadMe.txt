@@ -9,3 +9,7 @@
 //oRng.NumberFormat("dd-mm-yyy;@");
 
 //oSheet.get_Range("J9").Formula = "=DATEDIF(A9,F9,'d')";
+
+
+<add name="designdbEntities" connectionString="Server=localhost; Database=designdb ; Integrated Security=True" 
+providerName="System.Data.SqlClient" />
