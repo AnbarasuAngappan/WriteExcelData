@@ -19,19 +19,18 @@ namespace TestExcelSolar
 
         static void Main(string[] args)
         {
-            string connString = "";
-            string ExcelFilePath = "C:\\Users\\Anbarasu\\Desktop\\InvertorData.xlsx";
-            string temp = Path.GetFileName(ExcelFilePath).ToLower();
-            int _solarSerialNo = 0;
-            if (temp.Trim() == ".xls")//Connection String to Excel Workbook
+            string connString = "";            
+            string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
+            string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
+            if (ext.Trim() == ".xls")//Connection String to Exce o90-l Workbook
             {
                 connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
             }
-            else if (temp.Trim() == ".xlsx")
+            else if (ext.Trim() == ".xlsx")
             {
                 connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
             }
-            connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+            //connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
             string query = "Select * from [Sheet1$]";
             OleDbConnection conn = new OleDbConnection(connString);
             if (conn.State == ConnectionState.Closed)
@@ -44,88 +43,30 @@ namespace TestExcelSolar
             //grvExcelData.DataBind();
             da.Dispose();
             conn.Close();
-            conn.Dispose();
-            int row = 4;
+            conn.Dispose();           
             foreach (DataRow datarowItem in dataTable.Rows)
             {
-                var _houseNo = datarowItem.Field<string>("HouseNo");
-                var _ipAddress = datarowItem.Field<string>("InverterIP");
-                var _port = Convert.ToInt32(datarowItem.Field<double>("Port"));
-                var _deviceID = Convert.ToInt32(datarowItem.Field<double>("DeviceID"));
-                var _startAddress = Convert.ToInt32(datarowItem.Field<double>("StartAddress"));
-                var _qty = Convert.ToInt32(datarowItem.Field<double>("length"));
+                var _houseNo = datarowItem.Field<string>("houseNo");
+                var _ipAddress = datarowItem.Field<string>("IpAddress");
+                var _port = Convert.ToInt32(datarowItem.Field<double>("port"));
+                var _deviceID = Convert.ToInt32(datarowItem.Field<double>("deviceID"));
                 var _regType = Convert.ToInt32(datarowItem.Field<double>("registerType"));
-                ReadExcel();
-                Testy();
-                Test();
-                adfsdf();
-                int[] readHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _startAddress, _regType, _qty, Convert.ToByte(_deviceID));
-                _solarSerialNo = GetMSB(readHoldingRegisters);
-                //AddData(_houseNo, _ipAddress, _port, _solarSerialNo, 0, row);
-                AddData(_houseNo, _ipAddress, _port, 1231231321, 0, row);
-                row++;
+
+                var _dayYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("dayYeildStartAddress"));
+                var _dayYeildLength = Convert.ToInt32(datarowItem.Field<double>("dayYeildLength"));
+
+                var _serialnoStartAddress = Convert.ToInt32(datarowItem.Field<double>("serialnoStartAddress"));
+                var _serialnoLength = Convert.ToInt32(datarowItem.Field<double>("serialnoLength"));
+
+                var _totalYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("totalYeildStartAddress"));
+                var _totalYeildLength = Convert.ToInt32(datarowItem.Field<double>("totalYeildLength"));
+                
+                int[] readHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _serialnoStartAddress, _regType, _serialnoLength, Convert.ToByte(_deviceID));
+                var byteresult = GetMSB(readHoldingRegisters);
+                int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
+                WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), "NULL", DateTime.Now);
+
             }
-
-        }
-
-        public static void adfsdf()
-        {
-            //      Microsoft.Office.Interop.Excel.Application app = null;
-            //Microsoft.Office.Interop.Excel.Workbook workbook = null;
-            //Microsoft.Office.Interop.Excel.Worksheet worksheet = null;
-            //Microsoft.Office.Interop.Excel.Range workSheet_range = null;
-            //const int FIRTSCOLUMN = 0; //Here const you will use to select good column
-            //const int FIRSTROW = 0;
-            //const int FIRSTSHEET = 1;
-            //   app = new Microsoft.Office.Interop.Excel.Application();
-            //   app.Visible = true;
-            //   workbook = app.Workbooks.Add(1);
-            //   worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets[FIRSTSHEET];
-            //   //addData(FIRSTROW, FIRTSCOLUMN, "yourdata");
-            //   worksheet.Cells[FIRSTROW, FIRTSCOLUMN] = "asdsdfsdf";
-
-
-            Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-            string myPath = CreateDirectory();
-            //string myPath = @"Data.xlsx";
-            excelApp.Workbooks.Open("C:\\Users\\Anbarasu\\Desktop\\yuiyuiyuiyui.xls");
-
-            // Get Worksheet
-            Microsoft.Office.Interop.Excel.Worksheet worksheet = excelApp.Worksheets[1];
-            int rowIndex = 2; int colIndex = 2;
-            for (int i = 0; i < 10; i++)
-            {
-                excelApp.Cells[rowIndex, colIndex] = "\r123dghghfdgjhfdgj";
-            }
-
-            excelApp.Visible = false;
-
-
-            excelApp.ThisWorkbook.SaveAs("C:\\Users\\Anbarasu\\Desktop\\yuiyuiyuiyui.xls" + "fsdfsdf" + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-                            false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
-                            Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-
-            excelApp.ThisWorkbook.Close();
-            Marshal.ReleaseComObject(excelApp);
-
-            //string connectionString = "";
-            //string fileName = @"C:\Users\\Anbarasu\Desktop\Book1.xlsx";
-            //connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-            ////string connectionString = String.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;" +
-            ////        "Data Source={0};Extended Properties='Excel 12.0;HDR=YES;IMEX=0'", fileName);
-
-            //using (OleDbConnection cn = new OleDbConnection(connectionString))
-            //{
-            //    cn.Open();
-            //    OleDbCommand cmd1 = new OleDbCommand("INSERT INTO [Sheet1$] " +
-            //         "([Column1],[Column2],[Column3],[Column4]) " +
-            //         "VALUES(@value1, @value2, @value3, @value4)", cn);
-            //    cmd1.Parameters.AddWithValue("@value1", "Key1");
-            //    cmd1.Parameters.AddWithValue("@value2", "Sample1");
-            //    cmd1.Parameters.AddWithValue("@value3", 1);
-            //    cmd1.Parameters.AddWithValue("@value4", 9);
-            //    cmd1.ExecuteNonQuery();
-            //}
 
         }
 
@@ -243,7 +184,7 @@ namespace TestExcelSolar
 
         public static string CreateDirectory()
         {
-            string root = @"C:/" + DateTime.Now.Year.ToString() + "";
+            string root = @"F:/" + DateTime.Now.Year.ToString() + "";
             if (!Directory.Exists(root))
             {
                 Directory.CreateDirectory(root);
@@ -283,69 +224,6 @@ namespace TestExcelSolar
 
         }
 
-
-        public static void Test()
-        {
-            System.Data.OleDb.OleDbConnection oleDbConnection;
-            System.Data.OleDb.OleDbCommand oleDbCommand = new OleDbCommand();
-            string sql = null;
-            //string con = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source='C:\\Users\\Anbarasu\\Desktop\\Test.xlsx'/Furniture.mdb";
-            string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\Anbarasu\\Desktop\\Test.xlsx';Extended Properties=\"Excel 12.0;\"";
-            // connString = "Provider=Microsoft.jet.OLEDB.4.0;Data Source='C:\\Users\\Anbarasu\\Desktop\\Test.xlsx';Extended Properties=\"Excel 8.0";
-            oleDbConnection = new OleDbConnection(connString);
-            oleDbConnection.Open();
-            oleDbCommand.Connection = oleDbConnection;
-            sql = "Insert into [sheet1$] (Username,Password) values('1','ashdfjsiahdg')";//"Select * from [Sheet1$]";
-            oleDbCommand.CommandText = sql;
-            oleDbCommand.ExecuteNonQuery();
-            //OleDbDataAdapter da = new OleDbDataAdapter(oleDbCommand);
-            //System.Data.DataTable dataTable = new System.Data.DataTable();
-            //da.Fill(dataTable);
-            oleDbConnection.Close();
-
-        }
-
-        public static void Testy()
-        {
-            string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\Anbarasu\\Desktop\\Test.xlsx';Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-            OleDbConnection conn = new OleDbConnection();
-            conn = new OleDbConnection(connString);
-            //.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\kenny\Documents\Visual Studio 2010\Projects\Copy Cegees\Cegees\Cegees\Login.accdb";
-
-            String Username = "Sai";//TEXTNewUser.Text;
-            String Password = "baba"; //TEXTNewPass.Text;
-
-            string sql = "UPDATE [Sheet1$] " + "SET [Username]=" + Username.Trim() + " WHERE [Password]=" + Password.Trim();
-
-            OleDbCommand cmd = new OleDbCommand(sql);//("Insert into [sheet1$] (Username, [Password]) values(@Username, @Password)");//("INSERT into Login (Username, Password) Values(@Username, @Password)");
-            cmd.Connection = conn;
-
-            conn.Open();
-
-            if (conn.State == ConnectionState.Open)
-            {
-                cmd.Parameters.Add("@Username", OleDbType.VarChar).Value = Username;
-                cmd.Parameters.Add("@Password", OleDbType.VarChar).Value = Password;
-
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    //MessageBox.Show("Data Added");
-                    conn.Close();
-                }
-                catch (OleDbException ex)
-                {
-                    //MessageBox.Show(ex.Source);
-                    conn.Close();
-                }
-            }
-            else
-            {
-                //MessageBox.Show("Connection Failed");
-            }
-        }
-
-
         public static void ReadExcel()
         {
             string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\Anbarasu\\Desktop\\Test.xlsx';Extended Properties=\"Excel 12.0;\"";
@@ -358,29 +236,79 @@ namespace TestExcelSolar
             oleDbCommand.CommandText = sql;
             oleDbCommand.ExecuteNonQuery();
             oleDbConnection.Close();
+        }
+        public static void Excel(string ID, string Name)
+        {
+            string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\Test.xlsx';Extended Properties=\"Excel 12.0;\"";
+            using (OleDbConnection conn = new OleDbConnection(connString))
+            {
+                conn.Open();
+                // DbCommand also implements IDisposable
+                using (OleDbCommand cmd = conn.CreateCommand())
+                {
+                    // create command with placeholders
+                    cmd.CommandText =
+                       "INSERT INTO [sheet1$] " +
+                       "([ID], [Name]) " +
+                       "VALUES(@ID, @Name)";
+                    // add named parameters
+                    cmd.Parameters.AddRange(new OleDbParameter[]
+                    {
+                       new OleDbParameter("@a", ID),
+                       new OleDbParameter("@b", Name)
 
-            //using (OleDbConnection myCon = new OleDbConnection(ConfigurationManager.ConnectionStrings["DbConn"].ToString()))
-            //{..
+                    });
 
-            //string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\Anbarasu\\Desktop\\Test.xlsx';Extended Properties=\"Excel 12.0;\"";
-            //OleDbConnection conn = new OleDbConnection(connString);
-            //Solar solar = new Solar();
-            //solar.ID = 1;
-            //solar.Name = "Sai";
-            //OleDbCommand cmd = new OleDbCommand();
-            //cmd.CommandType = CommandType.Text;
-            //cmd.CommandText = "INSERT INTO [Sheet1$] " +
-            //                 "([ID], [Name]) " +
-            //                 "VALUES (?, ?)";
-            //cmd.Parameters.AddWithValue("@ID", solar.ID.ToString());
-            //cmd.Parameters.AddWithValue("@Name", solar.Name.ToString());
-            //cmd.Connection = conn;
-            //conn.Open();
-            //cmd.ExecuteNonQuery();
+                    // execute
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+        }
 
-            //System.Windows.Forms.MessageBox.Show("An Item has been successfully added", "Caption", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-            //}
-
+        public static void WriteExcelSolarReading(string HouseID, string IpAddress, string Port, string SerialNo, string Dayyeild, string Totalyeild, DateTime dateTimetimestamp)
+        {
+            try
+            {
+                string path = CreateDirectory();
+                string pathData = path + "SolarReading.xlsx";
+                if (File.Exists(pathData))
+                {
+                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + pathData + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
+                    using (OleDbConnection conn = new OleDbConnection(connString))
+                    {
+                        conn.Open();
+                        // DbCommand also implements IDisposable
+                        using (OleDbCommand cmd = conn.CreateCommand())
+                        {
+                            // create command with placeholders
+                            cmd.CommandText =
+                               "INSERT INTO [sheet1$] " +
+                               "([HouseID], [IpAddress],[Port],[SerialNo],[Dayyeild],[Totalyeild],[dateTimetimestamp]) " +
+                               "VALUES(@HouseID, @IpAddress, @Port, @SerialNo, @Dayyeild, @Totalyeild, @dateTimetimestamp)";
+                            // add named parameters
+                            cmd.Parameters.AddRange(new OleDbParameter[]
+                            {
+                               new OleDbParameter("@HouseID", HouseID),
+                               new OleDbParameter("@IpAddress", IpAddress),
+                               new OleDbParameter("@Port", Port),
+                               new OleDbParameter("@SerialNo",SerialNo),
+                               new OleDbParameter("@Dayyeild", Dayyeild),
+                               new OleDbParameter("@Totalyeild", Totalyeild),
+                               new OleDbParameter("@dateTimetimestamp", dateTimetimestamp)
+                            });
+                            // execute
+                            cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }       
+            
         }
 
     }
