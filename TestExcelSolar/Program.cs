@@ -18,13 +18,15 @@ namespace TestExcelSolar
         private static string fileName = "SolarReading.xlsx";
         private static  string sourcePath = @"C:\2018";
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
+        private static string sourceFile = null;
+        private static string destFile = null;
         static void Main(string[] args)
         {
 
             targetPath = CreateDirectory();      
             // Use Path class to manipulate file and directory paths.
-            string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
-            string destFile = System.IO.Path.Combine(targetPath, fileName);
+            sourceFile = System.IO.Path.Combine(sourcePath, fileName);
+            destFile = System.IO.Path.Combine(targetPath, fileName);
             // To copy a folder's contents to a new location:
             // Create a new target folder, if necessary.
             if (!System.IO.Directory.Exists(targetPath))
@@ -293,12 +295,11 @@ namespace TestExcelSolar
         public static void WriteExcelSolarReading(string HouseID, string IpAddress, string Port, string SerialNo, string Dayyeild, string Totalyeild, DateTime dateTimetimestamp)
         {
             try
-            {
-               
+            {              
 
-                if (File.Exists(""))
+                if (File.Exists(destFile))
                 {
-                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + "" + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
+                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + destFile + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
                     using (OleDbConnection conn = new OleDbConnection(connString))
                     {
                         conn.Open();
