@@ -15,10 +15,17 @@ namespace TestExcelSolar
 {
     class Program
     {
-
+        private static string _sourceFilepath = null;
+        private static string _destinationFilepath = null;
 
         static void Main(string[] args)
         {
+            _sourceFilepath = "F:\\2018\\SolarReading.xlsx"; 
+            _destinationFilepath = CreateDirectory();
+            //string pathData = path + "SolarReading.xlsx";
+           
+            File.Copy(_sourceFilepath, _destinationFilepath);
+
             string connString = "";            
             string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
             string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
@@ -195,7 +202,12 @@ namespace TestExcelSolar
             {
                 Directory.CreateDirectory(subdir);
             }
-            return subdir;
+            string subdir1 = subdir + "/" + DateTime.Today.ToString("MM/dd/yyyy") + "/";
+            if (!Directory.Exists(subdir1))
+            {
+                Directory.CreateDirectory(subdir1);
+            }
+            return subdir1;            
         }
 
         public static int GetMSB(int[] intValue)
@@ -238,6 +250,7 @@ namespace TestExcelSolar
             oleDbCommand.ExecuteNonQuery();
             oleDbConnection.Close();
         }
+
         public static void Excel(string ID, string Name)
         {
             string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\Test.xlsx';Extended Properties=\"Excel 12.0;\"";
@@ -271,11 +284,11 @@ namespace TestExcelSolar
         {
             try
             {
-                string path = CreateDirectory();
-                string pathData = path + "SolarReading.xlsx";
-                if (File.Exists(pathData))
+               
+
+                if (File.Exists(_destinationFilepath))
                 {
-                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + pathData + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
+                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + _destinationFilepath + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
                     using (OleDbConnection conn = new OleDbConnection(connString))
                     {
                         conn.Open();
