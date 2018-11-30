@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,16 +18,14 @@ namespace TestExcelSolar
     class Program
     {
         private static string fileName = "SolarReading.xlsx";
-        private static  string sourcePath = @"C:\2018";
+        private static  string sourcePath = @"F:\2018";
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
         private static string sourceFile = null;
         private static string destFile = null;
         static void Main(string[] args)
-        {
-
-            targetPath = CreateDirectory();      
-            // Use Path class to manipulate file and directory paths.
-            sourceFile = System.IO.Path.Combine(sourcePath, fileName);
+        {   
+            targetPath = CreateDirectory();                
+            sourceFile = System.IO.Path.Combine(sourcePath, fileName);// Use Path class to manipulate file and directory paths.
             destFile = System.IO.Path.Combine(targetPath, fileName);
             // To copy a folder's contents to a new location:
             // Create a new target folder, if necessary.
@@ -33,11 +33,9 @@ namespace TestExcelSolar
             {
                 System.IO.Directory.CreateDirectory(targetPath);
             }
-
             // To copy a file to another location and 
             // overwrite the destination file if it already exists.
-            System.IO.File.Copy(sourceFile, destFile, true);           
-
+            System.IO.File.Copy(sourceFile, destFile, true);            
             string connString = "";            
             string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
             string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
@@ -85,8 +83,9 @@ namespace TestExcelSolar
                 int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
                 int[] _totalYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _totalYeildStartAddress, _regType, _totalYeildLength, Convert.ToByte(_deviceID));
                 WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2] * 0.001), DateTime.Now);
-
+                //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
             }
+            SendEmailAsync("kushang@intellibot.io", "Solar Meter Reading", "Test");
 
         }
 
@@ -204,7 +203,7 @@ namespace TestExcelSolar
 
         public static string CreateDirectory()
         {
-            string root = @"C:/" + DateTime.Now.Year.ToString() + "";
+            string root = @"F:/" + DateTime.Now.Year.ToString() + "";
             if (!Directory.Exists(root))
             {
                 Directory.CreateDirectory(root);
@@ -334,6 +333,36 @@ namespace TestExcelSolar
                 throw;
             }       
             
+        }
+
+        public static Task SendEmailAsync(string email, string subject, string message)
+        {
+            try
+            {
+                MailMessage msg = new MailMessage();
+                msg.From = new MailAddress("noreply@intellibot.io");
+                msg.To.Add(new MailAddress(email));
+                msg.Subject = subject;
+                msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html));
+                //if (includeUserGuide) 
+                //{
+                //    msg.Attachments.Add(new Attachment(System.Web.HttpContext.Current.Server.MapPath(@"\\App_Data\\") + "Intellibot_Studio_Installation_Guide.pdf"));
+                //}
+                msg.Attachments.Add(new Attachment(destFile));
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("noreply@intellibot.io", "noreputl@123");
+                smtpClient.Credentials = credentials;
+
+                //var smtpClient = new SmtpClient();
+
+                smtpClient.EnableSsl = true;
+                smtpClient.Send(msg);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Task.FromResult(0);
         }
 
     }
