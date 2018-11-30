@@ -15,16 +15,26 @@ namespace TestExcelSolar
 {
     class Program
     {
-        private static string _sourceFilepath = null;
-        private static string _destinationFilepath = null;
-
+        private static string fileName = "SolarReading.xlsx";
+        private static  string sourcePath = @"C:\2018";
+        private static string targetPath = null;// @"C:\2018\November\11-30-2018";
         static void Main(string[] args)
         {
-            _sourceFilepath = "F:\\2018\\SolarReading.xlsx"; 
-            _destinationFilepath = CreateDirectory();
-            //string pathData = path + "SolarReading.xlsx";
-           
-            File.Copy(_sourceFilepath, _destinationFilepath);
+
+            targetPath = CreateDirectory();      
+            // Use Path class to manipulate file and directory paths.
+            string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
+            string destFile = System.IO.Path.Combine(targetPath, fileName);
+            // To copy a folder's contents to a new location:
+            // Create a new target folder, if necessary.
+            if (!System.IO.Directory.Exists(targetPath))
+            {
+                System.IO.Directory.CreateDirectory(targetPath);
+            }
+
+            // To copy a file to another location and 
+            // overwrite the destination file if it already exists.
+            System.IO.File.Copy(sourceFile, destFile, true);           
 
             string connString = "";            
             string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
@@ -192,7 +202,7 @@ namespace TestExcelSolar
 
         public static string CreateDirectory()
         {
-            string root = @"F:/" + DateTime.Now.Year.ToString() + "";
+            string root = @"C:/" + DateTime.Now.Year.ToString() + "";
             if (!Directory.Exists(root))
             {
                 Directory.CreateDirectory(root);
@@ -286,9 +296,9 @@ namespace TestExcelSolar
             {
                
 
-                if (File.Exists(_destinationFilepath))
+                if (File.Exists(""))
                 {
-                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + _destinationFilepath + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
+                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + "" + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
                     using (OleDbConnection conn = new OleDbConnection(connString))
                     {
                         conn.Open();
