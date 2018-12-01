@@ -22,72 +22,90 @@ namespace TestExcelSolar
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
         private static string sourceFile = null;
         private static string destFile = null;
+
         static private int _sleepTime = Convert.ToInt16(System.Configuration.ConfigurationManager.AppSettings["SleepKey"]);
+        static private int syncInterval = Convert.ToInt32(TimeSpan.FromMinutes(_sleepTime).TotalMilliseconds);
+
+
+        static private string _mailID = System.Configuration.ConfigurationManager.AppSettings["mailID"];
+        static private string _subject = System.Configuration.ConfigurationManager.AppSettings["subject"];
+        static private string _message = System.Configuration.ConfigurationManager.AppSettings["message"];
+
+
         static void Main(string[] args)
-        {   
-            targetPath = CreateDirectory();                
-            sourceFile = System.IO.Path.Combine(sourcePath, fileName);// Use Path class to manipulate file and directory paths.
-            destFile = System.IO.Path.Combine(targetPath, fileName);
-            // To copy a folder's contents to a new location:
-            // Create a new target folder, if necessary.
-            if (!System.IO.Directory.Exists(targetPath))
+        {
+            try
             {
-                System.IO.Directory.CreateDirectory(targetPath);
-            }
-            // To copy a file to another location and 
-            // overwrite the destination file if it already exists.
-            System.IO.File.Copy(sourceFile, destFile, true);            
-            string connString = "";            
-            string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
-            string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
-            if (ext.Trim() == ".xls")//Connection String to Exce o90-l Workbook
-            {
-                connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
-            }
-            else if (ext.Trim() == ".xlsx")
-            {
-                connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-            }
-            //connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-            string query = "Select * from [Sheet1$]";
-            OleDbConnection conn = new OleDbConnection(connString);
-            if (conn.State == ConnectionState.Closed)
-                conn.Open();
-            OleDbCommand cmd = new OleDbCommand(query, conn);
-            OleDbDataAdapter da = new OleDbDataAdapter(cmd);
-            System.Data.DataTable dataTable = new System.Data.DataTable();
-            da.Fill(dataTable);
-            //grvExcelData.DataSource = ds.Tables[0];
-            //grvExcelData.DataBind();
-            da.Dispose();
-            conn.Close();
-            conn.Dispose();           
-            foreach (DataRow datarowItem in dataTable.Rows)
-            {
-                var _houseNo = datarowItem.Field<string>("houseNo");
-                var _ipAddress = datarowItem.Field<string>("IpAddress");
-                var _port = Convert.ToInt32(datarowItem.Field<double>("port"));
-                var _deviceID = Convert.ToInt32(datarowItem.Field<double>("deviceID"));
-                var _regType = Convert.ToInt32(datarowItem.Field<double>("registerType"));
+                targetPath = CreateDirectory();
+                sourceFile = System.IO.Path.Combine(sourcePath, fileName);// Use Path class to manipulate file and directory paths.
+                destFile = System.IO.Path.Combine(targetPath, fileName);
+                // To copy a folder's contents to a new location:
+                // Create a new target folder, if necessary.
+                if (!System.IO.Directory.Exists(targetPath))
+                {
+                    System.IO.Directory.CreateDirectory(targetPath);
+                }
+                // To copy a file to another location and 
+                // overwrite the destination file if it already exists.
+                System.IO.File.Copy(sourceFile, destFile, true);
+                string connString = "";
+                string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
+                string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
+                if (ext.Trim() == ".xls")//Connection String to Exce o90-l Workbook
+                {
+                    connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
+                }
+                else if (ext.Trim() == ".xlsx")
+                {
+                    connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+                }
+                //connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + ExcelFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+                string query = "Select * from [Sheet1$]";
+                OleDbConnection conn = new OleDbConnection(connString);
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                OleDbCommand cmd = new OleDbCommand(query, conn);
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                System.Data.DataTable dataTable = new System.Data.DataTable();
+                da.Fill(dataTable);
+                //grvExcelData.DataSource = ds.Tables[0];
+                //grvExcelData.DataBind();
+                da.Dispose();
+                conn.Close();
+                conn.Dispose();
+                foreach (DataRow datarowItem in dataTable.Rows)
+                {
+                    var _houseNo = datarowItem.Field<string>("houseNo");
+                    var _ipAddress = datarowItem.Field<string>("IpAddress");
+                    var _port = Convert.ToInt32(datarowItem.Field<double>("port"));
+                    var _deviceID = Convert.ToInt32(datarowItem.Field<double>("deviceID"));
+                    var _regType = Convert.ToInt32(datarowItem.Field<double>("registerType"));
 
-                var _dayYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("dayYeildStartAddress"));
-                var _dayYeildLength = Convert.ToInt32(datarowItem.Field<double>("dayYeildLength"));
+                    var _dayYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("dayYeildStartAddress"));
+                    var _dayYeildLength = Convert.ToInt32(datarowItem.Field<double>("dayYeildLength"));
 
-                var _serialnoStartAddress = Convert.ToInt32(datarowItem.Field<double>("serialnoStartAddress"));
-                var _serialnoLength = Convert.ToInt32(datarowItem.Field<double>("serialnoLength"));
+                    var _serialnoStartAddress = Convert.ToInt32(datarowItem.Field<double>("serialnoStartAddress"));
+                    var _serialnoLength = Convert.ToInt32(datarowItem.Field<double>("serialnoLength"));
 
-                var _totalYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("totalYeildStartAddress"));
-                var _totalYeildLength = Convert.ToInt32(datarowItem.Field<double>("totalYeildLength"));
-                
-                int[] readHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _serialnoStartAddress, _regType, _serialnoLength, Convert.ToByte(_deviceID));
-                var byteresult = GetMSB(readHoldingRegisters);
-                int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
-                int[] _totalYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _totalYeildStartAddress, _regType, _totalYeildLength, Convert.ToByte(_deviceID));
-                WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2] * 0.001), DateTime.Now);
-                //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
+                    var _totalYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("totalYeildStartAddress"));
+                    var _totalYeildLength = Convert.ToInt32(datarowItem.Field<double>("totalYeildLength"));
+
+                    int[] readHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _serialnoStartAddress, _regType, _serialnoLength, Convert.ToByte(_deviceID));
+                    var byteresult = GetMSB(readHoldingRegisters);
+                    int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
+                    int[] _totalYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _totalYeildStartAddress, _regType, _totalYeildLength, Convert.ToByte(_deviceID));
+                    WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2] * 0.001), DateTime.Now);
+                    //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
+                }
+                SendEmailAsync(_mailID, _subject, _message);
+                Console.WriteLine("Process Completed SuccessFully");
             }
-            SendEmailAsync("kushang@intellibot.io", "Solar Meter Reading", "Test");
-            Console.WriteLine("Process Completed SuccessFully");
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
         }
 
         public static void AddData(string _houseNo, string _ipAddress, double _port, double _solarSerialNo, int _solarReading, int row)
