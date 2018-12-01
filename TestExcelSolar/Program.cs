@@ -22,6 +22,7 @@ namespace TestExcelSolar
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
         private static string sourceFile = null;
         private static string destFile = null;
+        static private int _sleepTime = Convert.ToInt16(System.Configuration.ConfigurationManager.AppSettings["SleepKey"]);
         static void Main(string[] args)
         {   
             targetPath = CreateDirectory();                
@@ -86,7 +87,7 @@ namespace TestExcelSolar
                 //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
             }
             SendEmailAsync("kushang@intellibot.io", "Solar Meter Reading", "Test");
-
+            Console.WriteLine("Process Completed SuccessFully");
         }
 
         public static void AddData(string _houseNo, string _ipAddress, double _port, double _solarSerialNo, int _solarReading, int row)
