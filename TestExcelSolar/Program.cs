@@ -25,13 +25,10 @@ namespace TestExcelSolar
 
         static private int _sleepTime = Convert.ToInt16(System.Configuration.ConfigurationManager.AppSettings["SleepKey"]);
         static private int syncInterval = Convert.ToInt32(TimeSpan.FromMinutes(_sleepTime).TotalMilliseconds);
-
-
+        
         static private string _mailID = System.Configuration.ConfigurationManager.AppSettings["mailID"];
         static private string _subject = System.Configuration.ConfigurationManager.AppSettings["subject"];
-        static private string _message = System.Configuration.ConfigurationManager.AppSettings["message"];
-
-
+        static private string _message = System.Configuration.ConfigurationManager.AppSettings["message"];        
         static void Main(string[] args)
         {
             try
@@ -49,7 +46,7 @@ namespace TestExcelSolar
                 // overwrite the destination file if it already exists.
                 System.IO.File.Copy(sourceFile, destFile, true);
                 string connString = "";
-                string ExcelFilePath = "F:\\2018\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx"; //"C:\\Users\\AMRORGANO\\Desktop\\SolarTemplate\\InvertorData1.xlsx";//"C:\\Users\\AMRORGANO\\Desktop\\InvertorData.xlsx";
+                string ExcelFilePath = "F:\\2018\\Book1.xlsx";//"F:\\2018\\InvertorData1.xlsx";
                 string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
                 if (ext.Trim() == ".xls")//Connection String to Exce o90-l Workbook
                 {
