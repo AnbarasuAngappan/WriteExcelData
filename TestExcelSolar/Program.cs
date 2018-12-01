@@ -17,6 +17,7 @@ namespace TestExcelSolar
 {
     class Program
     {
+        static private string logFile = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\SolarReaderException.log";
         private static string fileName = "SolarReading.xlsx";
         private static  string sourcePath = @"F:\2018";
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
@@ -99,9 +100,9 @@ namespace TestExcelSolar
                         WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2] * 0.001), DateTime.Now);
                         //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        throw;
+                         WriteToLog(DateTime.Now + e.InnerException.ToString());
                     }
                     
                 }
@@ -391,6 +392,22 @@ namespace TestExcelSolar
 
             }
             return Task.FromResult(0);
+        }
+
+        static private void WriteToLog(string _text)
+        {
+            try
+            {
+                if (_text != null && _text.Length > 0)
+                {
+                    System.IO.File.AppendAllText(logFile, _text + DateTime.Now + "\r\n");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
     }
