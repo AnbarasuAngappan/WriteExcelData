@@ -29,7 +29,10 @@ namespace TestExcelSolar
         
         static private string _mailID = System.Configuration.ConfigurationManager.AppSettings["mailID"];
         static private string _subject = System.Configuration.ConfigurationManager.AppSettings["subject"];
-        static private string _message = System.Configuration.ConfigurationManager.AppSettings["message"];        
+        static private string _message = System.Configuration.ConfigurationManager.AppSettings["message"];
+
+        
+
         static void Main(string[] args)
         {
             try
@@ -71,12 +74,14 @@ namespace TestExcelSolar
                 da.Dispose();
                 conn.Close();
                 conn.Dispose();
+                string _houseNO = null;
+                string _ipAddresscpy = null;
                 foreach (DataRow datarowItem in dataTable.Rows)
                 {
                     try
                     {
-                        var _houseNo = datarowItem.Field<string>("houseNo");
-                        var _ipAddress = datarowItem.Field<string>("IpAddress");
+                        var _houseNo = _houseNO = datarowItem.Field<string>("houseNo");                        
+                        var _ipAddress = _ipAddresscpy =  datarowItem.Field<string>("IpAddress");
                         var _port = Convert.ToInt32(datarowItem.Field<double>("port"));
                         var _deviceID = Convert.ToInt32(datarowItem.Field<double>("deviceID"));
                         var _regType = Convert.ToInt32(datarowItem.Field<double>("registerType"));
@@ -94,17 +99,18 @@ namespace TestExcelSolar
                         var byteresult = GetMSB(readHoldingRegisters);
                         int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
                         int[] _totalYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _totalYeildStartAddress, _regType, _totalYeildLength, Convert.ToByte(_deviceID));
-                        WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2] * 0.001), DateTime.Now);
+                        WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2]), DateTime.Now);
                         //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
                     }
                     catch (Exception e)
                     {
-                         WriteToLog(DateTime.Now + e.InnerException.ToString());
+                         WriteToLog(DateTime.Now + _houseNO +  _ipAddresscpy +   e.Message.ToString());
                     }
                     
                 }
                 SendEmailAsync(_mailID, _subject, _message);
                 Console.WriteLine("Process Completed SuccessFully");
+                Console.ReadLine();
             }
             catch (Exception)
             {
