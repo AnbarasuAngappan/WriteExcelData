@@ -366,7 +366,7 @@ namespace TestExcelSolar
             try
             {
                 MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("noreply@intellibot.io");
+                msg.From = new MailAddress("noreply@snlabs.in");
                 msg.To.Add(new MailAddress(email));
                 msg.Subject = subject;
                 msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html));
@@ -376,7 +376,7 @@ namespace TestExcelSolar
                 //}
                 msg.Attachments.Add(new Attachment(destFile));
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
-                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("noreply@intellibot.io", "noreputl@123");
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("noreply@snlabs.in", "Uber@123");
                 smtpClient.Credentials = credentials;
 
                 //var smtpClient = new SmtpClient();
