@@ -18,7 +18,7 @@ namespace TestExcelSolar
     class Program
     {
         static private string logFile = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\SolarReaderException.log";
-        private static string fileName = "SolarReading.xlsx";
+        private static string fileName = "MasterSolarReadingTemplate.xlsx";
         private static  string sourcePath = @"F:\2018";
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
         private static string sourceFile = null;
@@ -50,7 +50,7 @@ namespace TestExcelSolar
                 // overwrite the destination file if it already exists.
                 System.IO.File.Copy(sourceFile, destFile, true);
                 string connString = "";
-                string ExcelFilePath = "F:\\2018\\Book1.xlsx";//"F:\\2018\\InvertorData1.xlsx";
+                string ExcelFilePath = "F:\\2018\\MasterInvertorData.xlsx";//"F:\\2018\\Book1.xlsx";
                 string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
                 if (ext.Trim() == ".xls")//Connection String to Exce o90-l Workbook
                 {
@@ -114,9 +114,7 @@ namespace TestExcelSolar
             }
             catch (Exception)
             {
-
-                throw;
-                
+                throw;               
             }
             
         }
@@ -372,7 +370,7 @@ namespace TestExcelSolar
             try
             {
                 MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("noreply@intellibot.io");
+                msg.From = new MailAddress("noreply@snlabs.in");
                 msg.To.Add(new MailAddress(email));
                 msg.Subject = subject;
                 msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html));
@@ -382,7 +380,7 @@ namespace TestExcelSolar
                 //}
                 msg.Attachments.Add(new Attachment(destFile));
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
-                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("noreply@intellibot.io", "noreputl@123");
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("noreply@snlabs.in", "Uber@123");
                 smtpClient.Credentials = credentials;
 
                 //var smtpClient = new SmtpClient();
