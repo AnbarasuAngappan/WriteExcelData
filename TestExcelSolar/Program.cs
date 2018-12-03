@@ -19,7 +19,7 @@ namespace TestExcelSolar
     {
         static private string logFile = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\SolarReaderException.log";
         private static string fileName = "MasterSolarReadingTemplate.xlsx";
-        private static  string sourcePath = @"F:\2018";
+        private static string sourcePath = @"F:\2018";
         private static string targetPath = null;// @"C:\2018\November\11-30-2018";
         private static string sourceFile = null;
         private static string destFile = null;
@@ -75,7 +75,7 @@ namespace TestExcelSolar
                 conn.Close();
                 conn.Dispose();
                 string _houseNO = null;
-                string _ipAddresscpy = null;
+                string _ipAddresscpy = null;            
                 foreach (DataRow datarowItem in dataTable.Rows)
                 {
                     try
@@ -104,7 +104,8 @@ namespace TestExcelSolar
                     }
                     catch (Exception e)
                     {
-                         WriteToLog(DateTime.Now + _houseNO +  _ipAddresscpy +   e.Message.ToString());
+                         //WriteToLog(DateTime.Now + _houseNO +  _ipAddresscpy +   e.Message.ToString());
+                        WriteExcelSolarReadingException(_houseNO, _ipAddresscpy, DateTime.Now, e.Message.ToString());
                     }
                     
                 }
@@ -363,6 +364,47 @@ namespace TestExcelSolar
                 throw;
             }       
             
+        }
+
+        public static void WriteExcelSolarReadingException(string HouseID, string IpAddress,DateTime dateTimetimestamp, string errorMessage)
+        {
+            try
+            {
+
+                if (File.Exists(destFile))
+                {
+                    string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + destFile + ";Extended Properties=\"Excel 12.0;\"";//"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='C:\\Users\\AMRORGANO\\Desktop\\SolarReading.xlsx';Extended Properties=\"Excel 12.0;\"";
+                    using (OleDbConnection conn = new OleDbConnection(connString))
+                    {
+                        conn.Open();
+                        // DbCommand also implements IDisposable
+                        using (OleDbCommand cmd = conn.CreateCommand())
+                        {
+                            // create command with placeholders
+                            cmd.CommandText =
+                               "INSERT INTO [sheet2$] " +
+                               "([HouseID], [IpAddress],[dateTimetimestamp],[errorMessage]) " +
+                               "VALUES(@HouseID, @IpAddress, @dateTimetimestamp ,@errorMessage)";
+                            // add named parameters
+                            cmd.Parameters.AddRange(new OleDbParameter[]
+                            {
+                               new OleDbParameter("@HouseID", HouseID),
+                               new OleDbParameter("@IpAddress", IpAddress),
+                               new OleDbParameter("@dateTimetimestamp", dateTimetimestamp),
+                               new OleDbParameter("@errorMessage",errorMessage)
+                            });
+                            // execute
+                            cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         public static Task SendEmailAsync(string email, string subject, string message)
