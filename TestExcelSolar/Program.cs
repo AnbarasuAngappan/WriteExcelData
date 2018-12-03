@@ -376,7 +376,7 @@ namespace TestExcelSolar
                 msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(message, null, MediaTypeNames.Text.Html));
                 //if (includeUserGuide) 
                 //{
-                //    msg.Attachments.Add(new Attachment(System.Web.HttpContext.Current.Server.MapPath(@"\\App_Data\\") + "Intellibot_Studio_Installation_Guide.pdf"));
+                //    msg.Attachments.Add(new Attachment(System.Web.HttpContext.Current.Server.MapPath(@"\\App_Data\\") + "Intellibot_Studio_Installation_Guide.pdf"));zxczxcdfgsdfg
                 //}
                 msg.Attachments.Add(new Attachment(destFile));
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
