@@ -50,7 +50,7 @@ namespace TestExcelSolar
                 // overwrite the destination file if it already exists.
                 System.IO.File.Copy(sourceFile, destFile, true);
                 string connString = "";
-                string ExcelFilePath = "F:\\2018\\MasterInvertorData.xlsx";//"F:\\2018\\Book1.xlsx";
+                string ExcelFilePath = "F:\\2018\\Book1.xlsx";//"F:\\2018\\MasterInvertorData.xlsx";//
                 string ext = Path.GetExtension(ExcelFilePath);//string temp = Path.GetFileName(ExcelFilePath).ToLower(); 
                 if (ext.Trim() == ".xls")//Connection String to Exce o90-l Workbook
                 {
@@ -80,27 +80,32 @@ namespace TestExcelSolar
                 {
                     try
                     {
-                        var _houseNo = _houseNO = datarowItem.Field<string>("houseNo");                        
-                        var _ipAddress = _ipAddresscpy =  datarowItem.Field<string>("IpAddress");
-                        var _port = Convert.ToInt32(datarowItem.Field<double>("port"));
-                        var _deviceID = Convert.ToInt32(datarowItem.Field<double>("deviceID"));
-                        var _regType = Convert.ToInt32(datarowItem.Field<double>("registerType"));
+                        _houseNO = datarowItem.Field<string>("houseNo");
+                        if (_houseNO != null && _houseNO.Length > 0)
+                        {
+                            var _houseNo = _houseNO = datarowItem.Field<string>("houseNo");
+                            var _ipAddress = _ipAddresscpy = datarowItem.Field<string>("IpAddress");
+                            var _port = Convert.ToInt32(datarowItem.Field<double>("port"));
+                            var _deviceID = Convert.ToInt32(datarowItem.Field<double>("deviceID"));
+                            var _regType = Convert.ToInt32(datarowItem.Field<double>("registerType"));
 
-                        var _dayYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("dayYeildStartAddress"));
-                        var _dayYeildLength = Convert.ToInt32(datarowItem.Field<double>("dayYeildLength"));
+                            var _dayYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("dayYeildStartAddress"));
+                            var _dayYeildLength = Convert.ToInt32(datarowItem.Field<double>("dayYeildLength"));
 
-                        var _serialnoStartAddress = Convert.ToInt32(datarowItem.Field<double>("serialnoStartAddress"));
-                        var _serialnoLength = Convert.ToInt32(datarowItem.Field<double>("serialnoLength"));
+                            var _serialnoStartAddress = Convert.ToInt32(datarowItem.Field<double>("serialnoStartAddress"));
+                            var _serialnoLength = Convert.ToInt32(datarowItem.Field<double>("serialnoLength"));
 
-                        var _totalYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("totalYeildStartAddress"));
-                        var _totalYeildLength = Convert.ToInt32(datarowItem.Field<double>("totalYeildLength"));
+                            var _totalYeildStartAddress = Convert.ToInt32(datarowItem.Field<double>("totalYeildStartAddress"));
+                            var _totalYeildLength = Convert.ToInt32(datarowItem.Field<double>("totalYeildLength"));
 
-                        int[] readHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _serialnoStartAddress, _regType, _serialnoLength, Convert.ToByte(_deviceID));
-                        var byteresult = GetMSB(readHoldingRegisters);
-                        int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
-                        int[] _totalYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _totalYeildStartAddress, _regType, _totalYeildLength, Convert.ToByte(_deviceID));
-                        WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2]), DateTime.Now);
-                        //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
+                            int[] readHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _serialnoStartAddress, _regType, _serialnoLength, Convert.ToByte(_deviceID));
+                            var byteresult = GetMSB(readHoldingRegisters);
+                            int[] dailyYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _dayYeildStartAddress, _regType, _dayYeildLength, Convert.ToByte(_deviceID));
+                            int[] _totalYeildHoldingRegisters = ModbusReading.ReadRegisterWithDeviceIDs(_ipAddress, _port, _totalYeildStartAddress, _regType, _totalYeildLength, Convert.ToByte(_deviceID));
+                            WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), Convert.ToString(byteresult), Convert.ToString(dailyYeildHoldingRegisters[1] * 0.001), Convert.ToString(_totalYeildHoldingRegisters[2]), DateTime.Now);
+                            //WriteExcelSolarReading(_houseNo, _ipAddress, Convert.ToString(_port), "0.01", "1235", "789879", DateTime.Now);
+                        }
+
                     }
                     catch (Exception e)
                     {
