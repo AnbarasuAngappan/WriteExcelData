@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopyFile", "CopyFile\CopyFi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppNewLib", "ConsoleAppNewLib\ConsoleAppNewLib.csproj", "{AE2AD29C-2B2A-4C9A-8748-7F83F41D8F5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NModbus", "NModbus\NModbus.csproj", "{D385612C-94E8-4FD3-AEF3-8419DBC99D18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AE2AD29C-2B2A-4C9A-8748-7F83F41D8F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE2AD29C-2B2A-4C9A-8748-7F83F41D8F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE2AD29C-2B2A-4C9A-8748-7F83F41D8F5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D385612C-94E8-4FD3-AEF3-8419DBC99D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D385612C-94E8-4FD3-AEF3-8419DBC99D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D385612C-94E8-4FD3-AEF3-8419DBC99D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D385612C-94E8-4FD3-AEF3-8419DBC99D18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
