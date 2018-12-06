@@ -17,8 +17,8 @@ namespace NModbus
                 ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
 
                 // read five input values
-                ushort startAddress = 3204;
-                ushort numInputs = 2;
+                ushort startAddress = 3200;
+                ushort numInputs = 25;
                 //bool[] inputs = master.ReadInputs(startAddress, numInputs);
                 ushort[] outHolding = master.ReadHoldingRegisters(startAddress, numInputs);
 
