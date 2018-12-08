@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NModbus Dmitry", "NModbus D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppFieldTalk", "ConsoleAppFieldTalk\ConsoleAppFieldTalk.csproj", "{0CB8D1E0-A5FB-4D53-993B-997AA9EFA521}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UberModbusReaderLibrary", "..\UberModbusReaderLibrary\UberModbusReaderLibrary\UberModbusReaderLibrary.csproj", "{2D051127-4D03-4B68-82FA-95676F1DD315}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppTest", "ConsoleAppTest\ConsoleAppTest.csproj", "{0F2FBE92-337E-4807-BDB1-045F83DF3DF8}"
 EndProject
 Global
@@ -55,10 +53,6 @@ Global
 		{0CB8D1E0-A5FB-4D53-993B-997AA9EFA521}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CB8D1E0-A5FB-4D53-993B-997AA9EFA521}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CB8D1E0-A5FB-4D53-993B-997AA9EFA521}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D051127-4D03-4B68-82FA-95676F1DD315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D051127-4D03-4B68-82FA-95676F1DD315}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D051127-4D03-4B68-82FA-95676F1DD315}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D051127-4D03-4B68-82FA-95676F1DD315}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F2FBE92-337E-4807-BDB1-045F83DF3DF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0F2FBE92-337E-4807-BDB1-045F83DF3DF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F2FBE92-337E-4807-BDB1-045F83DF3DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
