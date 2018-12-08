@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FieldTalk.Modbus.Master">
-      <HintPath>..\..\UberModbusReaderLibrary\UberModbusReaderLibrary\bin\Debug\FieldTalk.Modbus.Master.dll</HintPath>
+      <HintPath>..\ConsoleAppFieldTalk\DLL\FieldTalk.Modbus.Master.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

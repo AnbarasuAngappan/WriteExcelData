@@ -50,7 +50,7 @@ namespace ConsoleAppTest
 
         }
 
-        public bool OpenProtocal(string _ipAddress, int _port)
+        public bool OpenProtocol(string _ipAddress, int _port)
         {
             try
             {
@@ -60,9 +60,7 @@ namespace ConsoleAppTest
 
                 if ((res == BusProtocolErrors.FTALK_SUCCESS))
                 {
-
                     return true;
-
                 }
                 else
                 {
@@ -73,8 +71,6 @@ namespace ConsoleAppTest
             {
                 throw;
             }
-
-
         }
 
         public short[] ReadHoldingregister(string _slaveAddress, string _strAddress, string _noReadRegister)

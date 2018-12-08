@@ -17,7 +17,16 @@ namespace ConsoleAppTest
         public void Test()
         {
             modbusReader = new ModBus();
-            bool asss = modbusReader.OpenProtocal("192.168.5.178", 502);
+            string _ipaddress = Console.ReadLine();
+            bool _response = modbusReader.OpenProtocol(_ipaddress, 502);
+            var _reading = modbusReader.ReadHoldingregister("1", "3204", "5");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            for (int i = 0; (i <= (5 - 1)); i++)
+            {              
+                Console.WriteLine(_reading[i] + "  ");
+            }
+            Console.ResetColor();
+            Console.ReadLine();
         }
     }
 }
